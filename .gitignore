@@ -1,0 +1,5 @@
+ignore/*
+build/*
+build_Debug/*
+CMakeLists.txt.user
+minesweeper.pro.user
