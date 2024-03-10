@@ -3,6 +3,7 @@
 
 #include "gamedata.h"
 
+#include <memory>
 #include <random>
 
 namespace minesweeper {
