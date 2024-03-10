@@ -1,0 +1,3 @@
+module Minesweeper
+GameItem     1.0  GameItem.qml
+MineField    1.0  MineField.qml
