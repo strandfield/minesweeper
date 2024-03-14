@@ -20,7 +20,7 @@ Rectangle {
 
         property FontMetrics fontMetrics: FontMetrics {
             id: theFontMetrics
-            font.pointSize: platformMobile ? 14 : 12
+            font.pointSize: platformMobile ? 18 : 12
         }
 
         property alias font: theFontMetrics.font
