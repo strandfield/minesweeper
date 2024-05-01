@@ -171,10 +171,8 @@ function drawMinefieldTile(ctx, x, y, ts, v, bg, options) {
 function drawMinefield(canvas, gameData, options)  {
     let ctx = canvas.getContext("2d");
     let ts = options.tileSize;
-    let outerHighlightWidth = options.outerHighlightWidth;
     let dead = gameData.dead;
     let gameGrid = gameData.grid;
-    let gameMines = gameData.mines;
     let colHighlight = options.colHighlight;
     let colLowLight = options.colLowLight;
     let colBackground = options.colBackground;
@@ -193,16 +191,10 @@ function drawMinefield(canvas, gameData, options)  {
             bg = (dead ? colBang : colHighlight);
     }
 
-    let mines = 0, markers = 0, closed = 0;
-
     for(let y = 0; y < gsh; y++) {
         for(let x = 0; x < gsw; x++) {
             let sqi = gsw * y + x;
             let v = gameGrid[sqi];
-
-            if (v < 0) closed++;
-            if (v === -1) markers++;
-            if (gameMines[sqi]) mines++;
 
             if (v >= 0 && v <= 8){
                 let flags = 0;
