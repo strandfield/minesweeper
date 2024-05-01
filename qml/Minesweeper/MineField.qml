@@ -177,7 +177,8 @@ Rectangle {
         height: Math.min(naturalSize.height, maximumSize.height)
 
         onPaint: {
-            MinesweeperJS.drawMinefieldFrame(frame, {
+            let ctx = frame.getContext("2d");
+            MinesweeperJS.drawMinefieldFrame(ctx, {
                                         "tileSize": mineField.tileSize,
                                         "outerHighlightWidth": outerHighlightWidth,
                                         "colHighlight": colHighlight,
@@ -268,7 +269,8 @@ Rectangle {
                         "flashFrameNumber": flashTimer.frameNumber
                     };
 
-                    MinesweeperJS.drawMinefield(contentCanvas, gameData, options);
+                    let ctx = contentCanvas.getContext("2d");
+                    MinesweeperJS.drawMinefield(ctx, gameData, options);
                 }
             }
 

@@ -5,8 +5,8 @@
 // @ https://www.chiark.greenend.org.uk/~sgtatham/puzzles/
 // Distributed under the MIT license (same as upstream).
 
-function drawMinefieldFrame(canvas, options) {
-    let ctx = canvas.getContext("2d");
+function drawMinefieldFrame(ctx, options) {
+    let canvas = ctx.canvas;
     let w = canvas.width;
     let h = canvas.height;
     let ts = options.tileSize;
@@ -168,8 +168,7 @@ function drawMinefieldTile(ctx, x, y, ts, v, bg, options) {
     }
 }
 
-function drawMinefield(canvas, gameData, options)  {
-    let ctx = canvas.getContext("2d");
+function drawMinefield(ctx, gameData, options)  {
     let ts = options.tileSize;
     let dead = gameData.dead;
     let gameGrid = gameData.grid;
