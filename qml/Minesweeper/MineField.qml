@@ -241,7 +241,6 @@ Rectangle {
                     let gameData = {
                         "dead": gameState == QMinesweeperGame.Lost,
                         "grid": gameGrid,
-                        "mines": gameMines,
                         "gridSize": gridSize
                     };
 
