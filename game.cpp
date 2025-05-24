@@ -42,6 +42,11 @@ bool Game::finished() const
   return won() || dead();
 }
 
+const Grid<PlayerKnowledge>& Game::grid() const
+{
+  return gameData().grid;
+}
+
 enum OpenSquareResult
 {
   KilledByMine = -1,
@@ -311,6 +316,13 @@ int Game::countUncovered() const
 {
   return std::count_if(m_data.grid.begin(), m_data.grid.end(), [](PlayerKnowledge k) {
     return static_cast<int>(k) >= 0 && static_cast<int>(k) <= 8;
+  });
+}
+
+int Game::countFlags() const
+{
+  return std::count_if(m_data.grid.begin(), m_data.grid.end(), [](PlayerKnowledge k) {
+    return k == PlayerKnowledge::MarkedAsMine;
   });
 }
 

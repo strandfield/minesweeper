@@ -17,12 +17,15 @@ public:
   explicit Game(const GameParams& params);
   explicit Game(GameData d);
 
-  GameData& gameData();
+  GameData& gameData(); // TODO: make private
+  const GameData& gameData() const;
 
   bool started() const;
   bool dead() const;
   bool won() const;
   bool finished() const;
+
+  const Grid<PlayerKnowledge>& grid() const;
 
   int mineLookup(int x, int y) const;
 
@@ -31,7 +34,13 @@ public:
   bool toggleMark(int x, int y);
 
   int countUncovered() const;
+  int countFlags() const;
 };
+
+inline const GameData& Game::gameData() const
+{
+  return m_data;
+}
 
 } // namespace minesweeper
 

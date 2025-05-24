@@ -6,31 +6,35 @@
 // Distributed under the MIT license (same as upstream).
 
 function drawMinefieldFrame(ctx, options) {
-    let canvas = ctx.canvas;
-    let w = canvas.width;
-    let h = canvas.height;
+
     let ts = options.tileSize;
     let outerHighlightWidth = options.outerHighlightWidth;
     let colHighlight = options.colHighlight;
     let colLowLight = options.colLowLight;
 
+    let canvas = ctx.canvas;
+    let w = options.rect ? options.rect.width : canvas.width;
+    let h = options.rect ? options.rect.height : canvas.height;
+    let dx = options.rect ? options.rect.x : 0;
+    let dy = options.rect ? options.rect.y : 0;
+
     ctx.fillStyle = colHighlight;
     ctx.beginPath();
-    ctx.moveTo(w, h);
-    ctx.lineTo(w, 0);
-    ctx.lineTo(w - outerHighlightWidth - ts, outerHighlightWidth + ts);
-    ctx.lineTo(outerHighlightWidth + ts,  h - outerHighlightWidth - ts);
-    ctx.lineTo(0, h);
+    ctx.moveTo(dx + w, dy + h);
+    ctx.lineTo(dx + w, dy + 0);
+    ctx.lineTo(dx + w - outerHighlightWidth - ts, dy + outerHighlightWidth + ts);
+    ctx.lineTo(dx + outerHighlightWidth + ts,  dy + h - outerHighlightWidth - ts);
+    ctx.lineTo(dx + 0, dy + h);
     ctx.closePath();
     ctx.fill();
 
     ctx.fillStyle = colLowLight;
     ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(w, 0);
-    ctx.lineTo(w - outerHighlightWidth - ts, outerHighlightWidth + ts);
-    ctx.lineTo(outerHighlightWidth + ts,  h - outerHighlightWidth - ts);
-    ctx.lineTo(0, h);
+    ctx.moveTo(dx + 0, dy + 0);
+    ctx.lineTo(dx + w, dy + 0);
+    ctx.lineTo(dx + w - outerHighlightWidth - ts, dy + outerHighlightWidth + ts);
+    ctx.lineTo(dx + outerHighlightWidth + ts,  dy + h - outerHighlightWidth - ts);
+    ctx.lineTo(dx + 0, dy + h);
     ctx.closePath();
     ctx.fill();
 }
@@ -49,9 +53,6 @@ function drawMinefieldTile(ctx, x, y, ts, v, bg, options) {
     let digitsColors = options.digitsColors;
     let colCross = options.colCross;
     let font = options.font;
-
-    x = x * ts;
-    y = y * ts;
 
     if (v < 0)
     {
@@ -146,7 +147,11 @@ function drawMinefieldTile(ctx, x, y, ts, v, bg, options) {
             let radius = Math.floor(5 * r / 6);
             ctx.fillStyle = colMine;
             ctx.beginPath();
-            ctx.ellipse(cx - radius, cy - radius, 2*radius, 2*radius);
+            if (options.qmlCanvas) {
+                ctx.ellipse(cx - radius, cy - radius, 2*radius, 2*radius);
+            } else {
+                ctx.ellipse(cx, cy, radius, radius, 0, 0, 2 * Math.PI);
+            }
             ctx.fill();
             ctx.fillRect(cx - r / 6, cy - r, 2 * (r / 6) + 1, 2*r + 1);
             ctx.fillRect(cx - r, cy - r / 6, 2*r + 1, 2 * (r / 6) + 1);
@@ -183,6 +188,9 @@ function drawMinefield(ctx, gameData, options)  {
 
     let bg = colBackground;
 
+    let dx = options.rect ? options.rect.x : 0;
+    let dy = options.rect ? options.rect.y : 0;
+
     if (flash) {
         if (flashFrameNumber % 2)
             bg = (dead ? colBackground : colLowLight);
@@ -212,12 +220,17 @@ function drawMinefield(ctx, gameData, options)  {
                     v |= 32;
             }
 
-            if (v === -2 && Math.abs(x - hx) <= hradius && Math.abs(y - hy) <= hradius) {
-                v -= 20;
+            if (options.cursorHighlight) {
+                let hx = options.cursorHighlight.x;
+                let hy = options.cursorHighlight.y;
+                let hradius = options.cursorHighlight.radius;
+                if (v === -2 && Math.abs(x - hx) <= hradius && Math.abs(y - hy) <= hradius) {
+                    v -= 20;
+                }
             }
 
             // TODO: do not redraw the tile if nothing has changed
-            drawMinefieldTile(ctx, x, y, ts, v, bg, options);
+            drawMinefieldTile(ctx, dx + x*ts, dy + y*ts, ts, v, bg, options);
         }
     }
 }
