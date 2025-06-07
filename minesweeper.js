@@ -1,6 +1,5 @@
 
 // Javascript code for drawing the minesweeper grid in a canvas.
-// Currently only tested on a QML Canvas.
 // Adapted from the game "Mines" from Simon Tatham's Puzzle Collection
 // @ https://www.chiark.greenend.org.uk/~sgtatham/puzzles/
 // Distributed under the MIT license (same as upstream).
