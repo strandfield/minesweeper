@@ -6,53 +6,11 @@
 
 namespace minesweeper {
 
-Game::Game(const GameParams& params)
-{
-  m_data.params = params;
-}
-
-Game::Game(GameData d) :
-    m_data(std::move(d))
-{
-
-}
-
-GameData& Game::gameData()
-{
-  return m_data;
-}
-
-bool Game::started() const
-{
-  return !m_data.mines.empty();
-}
-
-bool Game::dead() const
-{
-  return m_data.dead;
-}
-
-bool Game::won() const
-{
-  return m_data.won;
-}
-
-bool Game::finished() const
-{
-  return won() || dead();
-}
-
-const Grid<PlayerKnowledge>& Game::grid() const
-{
-  return gameData().grid;
-}
-
 enum OpenSquareResult
 {
   KilledByMine = -1,
   OK = 0
 };
-
 
 int open_square(Game& thegame, int x, int y)
 {
@@ -154,6 +112,66 @@ int open_square(Game& thegame, int x, int y)
   return OK;
 }
 
+Game::Game(const GameParams& params)
+{
+  m_data.params = params;
+}
+
+Game::Game(GameData d) :
+    m_data(std::move(d))
+{
+
+}
+
+GameData& Game::gameData()
+{
+  return m_data;
+}
+
+bool Game::generated() const
+{
+  return !m_data.mines.empty();
+}
+
+void Game::generate(int sx, int sy)
+{
+  assert(!generated());
+
+  m_data.params.sx = sx;
+  m_data.params.sy = sy;
+
+  Generator generator;
+  m_data.seed = generator.seed();
+  m_data.mines = generator.generate(m_data.params);
+
+  if (m_data.grid.size() != m_data.mines.size())
+  {
+    m_data.grid = Grid<PlayerKnowledge>(m_data.mines.geom(), PlayerKnowledge::Unknown);
+  }
+
+  open_square(*this, sx, sy);
+}
+
+bool Game::dead() const
+{
+  return m_data.dead;
+}
+
+bool Game::won() const
+{
+  return m_data.won;
+}
+
+bool Game::finished() const
+{
+  return won() || dead();
+}
+
+const Grid<PlayerKnowledge>& Game::grid() const
+{
+  return gameData().grid;
+}
+
 /**
  * \brief computes the number of mines surrounding a square
  * \param x  x-coordinate of the square
@@ -202,21 +220,11 @@ int Game::mineLookup(int x, int y) const
  */
 void Game::openSquare(int x, int y)
 {
-  if (m_data.mines.empty()) { // if the the grid has not been generated yet...
-    // ... generate one
-    m_data.params.sx = x;
-    m_data.params.sy = y;
-
-    Generator generator;
-    m_data.seed = generator.seed();
-    m_data.mines = generator.generate(m_data.params);
-
-    if (m_data.grid.size() != m_data.mines.size()) {
-      m_data.grid = Grid<PlayerKnowledge>(m_data.mines.geom(), PlayerKnowledge::Unknown);
-    }
+  if (!generated()) {
+    generate(x, y);
+  } else {
+    open_square(*this, x, y);
   }
-
-  open_square(*this, x, y);
 }
 
 /**

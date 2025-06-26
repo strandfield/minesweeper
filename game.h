@@ -20,7 +20,9 @@ public:
   GameData& gameData(); // TODO: make private
   const GameData& gameData() const;
 
-  bool started() const;
+  bool generated() const;
+  void generate(int sx, int sy);
+
   bool dead() const;
   bool won() const;
   bool finished() const;
